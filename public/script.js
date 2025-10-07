@@ -310,7 +310,8 @@ function handleContactSeller(shipId) {
     document.getElementById('contactShipInfo').innerHTML = `
         <h3>${ship.name}</h3>
         <div class="ship-image" style="margin: 1rem 0;">
-            <img src="${ship.image}" alt="${ship.name}" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
+            <img src="${ship.image}" alt="${ship.name}" style="max-width: 100%; max-height: 200px; border-radius: 8px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="placeholder" style="display: none; color: rgba(255,255,255,0.5); font-style: italic;">Ship Screenshot</div>
         </div>
         <div class="ship-price" style="font-size: 1.5rem; margin: 1rem 0;">$${ship.price.toLocaleString()}</div>
         <p>${ship.description}</p>
@@ -472,9 +473,15 @@ function handleRegister(e) {
     }
 }
 
-function handleAddShip(e) {
+async function handleAddShip(e) {
     e.preventDefault();
     if (!currentUser) return;
+    
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Processing Images...';
+    submitBtn.disabled = true;
     
     const name = document.getElementById('shipName').value;
     const price = parseInt(document.getElementById('shipPrice').value);
@@ -492,10 +499,24 @@ function handleAddShip(e) {
         return tag.startsWith('@') ? tag : `@${tag}`;
     }).filter(tag => tag.length > 1);
     
-    // Handle file uploads
-    const imageUrl = shipImageFile ? URL.createObjectURL(shipImageFile) : '';
-    const blueprintFileName = blueprintFile ? blueprintFile.name : '';
-    const blueprintImageUrl = blueprintImageFile ? URL.createObjectURL(blueprintImageFile) : null;
+    // Convert images to base64 for persistence
+    let imageBase64 = '';
+    let blueprintImageBase64 = null;
+    
+    try {
+        if (shipImageFile) {
+            imageBase64 = await fileToBase64(shipImageFile);
+        }
+        if (blueprintImageFile) {
+            blueprintImageBase64 = await fileToBase64(blueprintImageFile);
+        }
+    } catch (error) {
+        showCustomAlert('Upload Error', 'Failed to process image files. Please try again.', 'error');
+        // Restore button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        return;
+    }
     
     const newShip = {
         id: Date.now(),
@@ -504,12 +525,12 @@ function handleAddShip(e) {
         description: description || 'No description provided.',
         category: category,
         tags: tags,
-        image: imageUrl,
+        image: imageBase64, // Now stored as base64 string
         seller: currentUser.name,
         discord: currentUser.discord,
         dateAdded: new Date(),
-        blueprintFile: blueprintFileName,
-        blueprintImage: blueprintImageUrl,
+        blueprintFile: blueprintFile ? blueprintFile.name : '',
+        blueprintImage: blueprintImageBase64, // Now stored as base64 string
         paymentMethod: paymentMethod
     };
     
@@ -527,6 +548,10 @@ function handleAddShip(e) {
     renderShips();
     closeModal('addShipModal');
     updateUserMenu();
+    
+    // Restore button
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
     
     // Clear form
     document.getElementById('addShipForm').reset();
@@ -761,6 +786,16 @@ function showCustomAlert(title, message, type = 'success') {
 function closeCustomAlert() {
     const alertModal = document.getElementById('customAlert');
     alertModal.style.display = 'none';
+}
+
+// Helper function to convert file to base64
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
 }
 
 // Admin Panel Functions
