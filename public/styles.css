@@ -873,7 +873,7 @@ body {
 /* User Menu */
 .user-menu {
     min-height: 200px;
-    max-height: 60vh;
+    max-height: 75vh;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
@@ -881,6 +881,16 @@ body {
     padding-right: 0.5rem; /* Add space for scrollbar */
     /* Force scrollbar to always be visible when content overflows */
     scrollbar-gutter: stable;
+    /* Ensure content can scroll to bottom */
+    padding-bottom: 1rem;
+    /* Ensure smooth scrolling */
+    scroll-behavior: smooth;
+}
+
+/* Ensure logout button area is always accessible */
+.user-menu .btn-secondary:last-child {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 /* Custom scrollbar for user menu */
@@ -1612,7 +1622,7 @@ body {
     }
     
     .user-menu {
-        max-height: 65vh;
+        max-height: 70vh;
         min-height: 200px;
     }
 }
@@ -1629,7 +1639,7 @@ body {
     }
     
     .user-menu {
-        max-height: 55vh;
+        max-height: 65vh;
         min-height: 180px;
     }
     
@@ -1692,7 +1702,7 @@ body {
     }
     
     .user-menu {
-        max-height: 50vh;
+        max-height: 60vh;
         min-height: 160px;
     }
     
@@ -1760,7 +1770,7 @@ body {
     }
     
     .user-menu {
-        max-height: 45vh;
+        max-height: 55vh;
         min-height: 140px;
     }
     

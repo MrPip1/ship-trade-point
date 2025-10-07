@@ -1011,6 +1011,20 @@ function updateUserMenu() {
     updateMyListings();
     updateBuyerMessages();
     updateSalesStats();
+    
+    // Ensure user menu is scrollable and all content is accessible
+    setTimeout(() => {
+        const userMenu = document.querySelector('.user-menu');
+        if (userMenu) {
+            // Force scrollbar to appear if content overflows
+            userMenu.style.overflowY = 'auto';
+            
+            // Check if content overflows and ensure scrollbar is visible
+            if (userMenu.scrollHeight > userMenu.clientHeight) {
+                userMenu.style.paddingRight = '0.5rem';
+            }
+        }
+    }, 100);
 }
 
 function updateUserInfo() {
@@ -1217,15 +1231,15 @@ function adjustModalHeight(modal) {
         const userMenu = modal.querySelector('.user-menu');
         if (userMenu) {
             if (viewportHeight <= 600) {
-                userMenu.style.maxHeight = '45vh';
-            } else if (viewportHeight <= 700) {
-                userMenu.style.maxHeight = '50vh';
-            } else if (viewportHeight <= 800) {
                 userMenu.style.maxHeight = '55vh';
-            } else if (viewportHeight <= 900) {
-                userMenu.style.maxHeight = '65vh';
-            } else {
+            } else if (viewportHeight <= 700) {
                 userMenu.style.maxHeight = '60vh';
+            } else if (viewportHeight <= 800) {
+                userMenu.style.maxHeight = '65vh';
+            } else if (viewportHeight <= 900) {
+                userMenu.style.maxHeight = '70vh';
+            } else {
+                userMenu.style.maxHeight = '75vh';
             }
         }
     }
