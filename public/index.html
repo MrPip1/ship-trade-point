@@ -27,6 +27,28 @@
                     <span id="userName"></span>
                 </button>
             </div>
+            <button id="mobileMenuBtn" class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div id="mobileMenu" class="mobile-menu">
+            <button class="mobile-menu-close" onclick="closeMobileMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="mobile-menu-content">
+                <div class="mobile-search">
+                    <input type="text" id="mobileSearchInput" placeholder="Search ships...">
+                    <button id="mobileSearchBtn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="mobile-actions">
+                    <button id="mobileLoginBtn" class="btn-secondary">Login</button>
+                    <button id="mobileRegisterBtn" class="btn-primary">Register</button>
+                    <button id="mobileUserMenuBtn" class="btn-user" style="display: none;">
+                        <i class="fas fa-user"></i>
+                        <span id="mobileUserName"></span>
+                    </button>
+                </div>
+            </div>
         </div>
     </nav>
 

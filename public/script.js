@@ -402,6 +402,25 @@ function setupEventListeners() {
     document.getElementById('registerBtn').addEventListener('click', () => openModal('registerModal'));
     document.getElementById('userMenuBtn').addEventListener('click', () => openModal('userMenuModal'));
     
+    // Mobile menu events
+    document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+    document.getElementById('mobileLoginBtn').addEventListener('click', () => {
+        openModal('loginModal');
+        closeMobileMenu();
+    });
+    document.getElementById('mobileRegisterBtn').addEventListener('click', () => {
+        openModal('registerModal');
+        closeMobileMenu();
+    });
+    document.getElementById('mobileUserMenuBtn').addEventListener('click', () => {
+        openModal('userMenuModal');
+        closeMobileMenu();
+    });
+    
+    // Mobile search events
+    document.getElementById('mobileSearchInput').addEventListener('input', handleMobileSearch);
+    document.getElementById('mobileSearchBtn').addEventListener('click', handleMobileSearch);
+    
     // Search and filter events
     document.getElementById('searchInput').addEventListener('input', handleSearch);
     document.getElementById('searchBtn').addEventListener('click', handleSearch);
@@ -972,6 +991,9 @@ function updateAuthUI() {
         registerBtn.style.display = 'block';
         userMenuBtn.style.display = 'none';
     }
+    
+    // Also update mobile menu
+    updateMobileAuthUI();
 }
 
 function updateUserMenu() {
@@ -1166,6 +1188,57 @@ function openModal(modalId) {
 
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
+}
+
+// Mobile menu functions
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const isOpen = mobileMenu.style.display === 'block';
+    
+    if (isOpen) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
+    }
+}
+
+function openMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenu.style.display = 'block';
+    
+    // Update mobile user menu if logged in
+    updateMobileAuthUI();
+}
+
+function closeMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenu.style.display = 'none';
+}
+
+function handleMobileSearch() {
+    const searchTerm = document.getElementById('mobileSearchInput').value.toLowerCase();
+    // Sync with main search
+    document.getElementById('searchInput').value = searchTerm;
+    applyFilters(searchTerm);
+    closeMobileMenu();
+}
+
+function updateMobileAuthUI() {
+    const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+    const mobileRegisterBtn = document.getElementById('mobileRegisterBtn');
+    const mobileUserMenuBtn = document.getElementById('mobileUserMenuBtn');
+    const mobileUserName = document.getElementById('mobileUserName');
+    
+    if (currentUser) {
+        mobileLoginBtn.style.display = 'none';
+        mobileRegisterBtn.style.display = 'none';
+        mobileUserMenuBtn.style.display = 'flex';
+        mobileUserName.textContent = currentUser.name;
+    } else {
+        mobileLoginBtn.style.display = 'block';
+        mobileRegisterBtn.style.display = 'block';
+        mobileUserMenuBtn.style.display = 'none';
+    }
 }
 
 // Logout function (can be called from user menu)
