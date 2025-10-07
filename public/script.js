@@ -1228,18 +1228,17 @@ function adjustModalHeight(modal) {
     
     // Adjust user menu specifically
     if (modal.id === 'userMenuModal') {
-        const userMenu = modal.querySelector('.user-menu');
-        if (userMenu) {
-            if (viewportHeight <= 600) {
-                userMenu.style.maxHeight = '55vh';
-            } else if (viewportHeight <= 700) {
-                userMenu.style.maxHeight = '60vh';
-            } else if (viewportHeight <= 800) {
-                userMenu.style.maxHeight = '65vh';
-            } else if (viewportHeight <= 900) {
-                userMenu.style.maxHeight = '70vh';
-            } else {
-                userMenu.style.maxHeight = '75vh';
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            // Set the modal content to be scrollable
+            modalContent.style.overflowY = 'auto';
+            modalContent.style.maxHeight = '85vh';
+            
+            // Remove any height restrictions from user menu
+            const userMenu = modal.querySelector('.user-menu');
+            if (userMenu) {
+                userMenu.style.maxHeight = 'none';
+                userMenu.style.overflowY = 'visible';
             }
         }
     }

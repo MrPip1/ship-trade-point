@@ -693,6 +693,9 @@ body {
     overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+    /* Ensure the modal itself is scrollable */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Custom scrollbar for large modals */
@@ -873,14 +876,10 @@ body {
 /* User Menu */
 .user-menu {
     min-height: 200px;
-    max-height: 75vh;
-    overflow-y: auto;
+    max-height: none; /* Remove height restriction */
+    overflow-y: visible; /* Allow content to flow naturally */
     overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
-    padding-right: 0.5rem; /* Add space for scrollbar */
-    /* Force scrollbar to always be visible when content overflows */
-    scrollbar-gutter: stable;
+    padding-right: 0.5rem;
     /* Ensure content can scroll to bottom */
     padding-bottom: 1rem;
     /* Ensure smooth scrolling */
@@ -891,6 +890,61 @@ body {
 .user-menu .btn-secondary:last-child {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+}
+
+/* User Menu Modal specific styling */
+#userMenuModal .modal-content {
+    max-height: 85vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+    padding-right: 0.5rem;
+}
+
+/* Height-based adjustments for user menu modal */
+@media (max-height: 800px) {
+    #userMenuModal .modal-content {
+        max-height: 90vh;
+    }
+}
+
+@media (max-height: 700px) {
+    #userMenuModal .modal-content {
+        max-height: 92vh;
+    }
+}
+
+@media (max-height: 600px) {
+    #userMenuModal .modal-content {
+        max-height: 95vh;
+    }
+}
+
+/* Custom scrollbar for user menu modal */
+#userMenuModal .modal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+#userMenuModal .modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+#userMenuModal .modal-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #00d4ff, #0099cc);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#userMenuModal .modal-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #0099cc, #0077aa);
+    transform: scale(1.1);
+}
+
+#userMenuModal .modal-content::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(45deg, #0077aa, #005588);
 }
 
 /* Custom scrollbar for user menu */
