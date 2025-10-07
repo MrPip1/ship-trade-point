@@ -1,5 +1,6 @@
 // Global state management
 let currentUser = null;
+let registeredUsers = []; // Store all registered users
 let ships = [];
 let filteredShips = [];
 let userFavorites = [];
@@ -113,7 +114,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
-    // Load user data from localStorage
+    // Load registered users
+    registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    
+    // Load current user data from localStorage
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
@@ -445,13 +449,17 @@ function handleLogin(e) {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     
-    // Simple validation (in a real app, this would be server-side)
-    if (email && password) {
+    // Find user in registered users
+    const user = registeredUsers.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        // Set current user without password
         currentUser = {
-            id: Date.now(),
-            name: email.split('@')[0],
-            email: email,
-            joinDate: new Date()
+            id: user.id,
+            name: user.name,
+            discord: user.discord,
+            email: user.email,
+            joinDate: user.joinDate
         };
         
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -460,6 +468,9 @@ function handleLogin(e) {
         
         // Clear form
         document.getElementById('loginForm').reset();
+        alert('Login successful!');
+    } else {
+        alert('Invalid email or password. Please register first or check your credentials.');
     }
 }
 
@@ -476,13 +487,33 @@ function handleRegister(e) {
         return;
     }
     
+    // Check if email already exists
+    if (registeredUsers.find(u => u.email === email)) {
+        alert('An account with this email already exists. Please use a different email or try logging in.');
+        return;
+    }
+    
     if (name && discord && email && password) {
-        currentUser = {
+        const newUser = {
             id: Date.now(),
             name: name,
             discord: discord,
             email: email,
+            password: password,
             joinDate: new Date()
+        };
+        
+        // Add to registered users
+        registeredUsers.push(newUser);
+        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+        
+        // Set as current user (without password)
+        currentUser = {
+            id: newUser.id,
+            name: newUser.name,
+            discord: newUser.discord,
+            email: newUser.email,
+            joinDate: newUser.joinDate
         };
         
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -491,6 +522,7 @@ function handleRegister(e) {
         
         // Clear form
         document.getElementById('registerForm').reset();
+        alert('Account created successfully! You are now logged in.');
     }
 }
 

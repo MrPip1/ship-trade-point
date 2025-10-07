@@ -452,21 +452,44 @@ body {
 
 .modal-content {
     background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-    margin: 5% auto;
+    margin: 2% auto;
     padding: 2rem;
     border: 2px solid #00d4ff;
     border-radius: 15px;
     width: 90%;
     max-width: 500px;
+    max-height: 90vh;
     position: relative;
     color: white;
     box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .modal-content.large {
     max-width: 700px;
     max-height: 90vh;
     overflow-y: auto;
+}
+
+/* Custom scrollbar for modals */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 .close {
