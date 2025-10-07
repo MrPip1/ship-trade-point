@@ -872,31 +872,41 @@ body {
 
 /* User Menu */
 .user-menu {
-    min-height: 300px;
-    max-height: 70vh;
+    min-height: 200px;
+    max-height: 60vh;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+    padding-right: 0.5rem; /* Add space for scrollbar */
+    /* Force scrollbar to always be visible when content overflows */
+    scrollbar-gutter: stable;
 }
 
 /* Custom scrollbar for user menu */
 .user-menu::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 .user-menu::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
 }
 
 .user-menu::-webkit-scrollbar-thumb {
-    background: #00d4ff;
-    border-radius: 4px;
+    background: linear-gradient(45deg, #00d4ff, #0099cc);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .user-menu::-webkit-scrollbar-thumb:hover {
-    background: #0099cc;
+    background: linear-gradient(45deg, #0099cc, #0077aa);
+    transform: scale(1.1);
+}
+
+.user-menu::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(45deg, #0077aa, #005588);
 }
 
 @media (max-width: 768px) {
@@ -1602,8 +1612,8 @@ body {
     }
     
     .user-menu {
-        max-height: 75vh;
-        min-height: 250px;
+        max-height: 65vh;
+        min-height: 200px;
     }
 }
 
@@ -1619,8 +1629,8 @@ body {
     }
     
     .user-menu {
-        max-height: 70vh;
-        min-height: 200px;
+        max-height: 55vh;
+        min-height: 180px;
     }
     
     .form-group {
@@ -1682,8 +1692,8 @@ body {
     }
     
     .user-menu {
-        max-height: 65vh;
-        min-height: 180px;
+        max-height: 50vh;
+        min-height: 160px;
     }
     
     .form-group {
@@ -1750,8 +1760,8 @@ body {
     }
     
     .user-menu {
-        max-height: 60vh;
-        min-height: 150px;
+        max-height: 45vh;
+        min-height: 140px;
     }
     
     .form-group {

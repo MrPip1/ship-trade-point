@@ -1217,13 +1217,15 @@ function adjustModalHeight(modal) {
         const userMenu = modal.querySelector('.user-menu');
         if (userMenu) {
             if (viewportHeight <= 600) {
-                userMenu.style.maxHeight = '60vh';
+                userMenu.style.maxHeight = '45vh';
             } else if (viewportHeight <= 700) {
-                userMenu.style.maxHeight = '65vh';
+                userMenu.style.maxHeight = '50vh';
             } else if (viewportHeight <= 800) {
-                userMenu.style.maxHeight = '70vh';
+                userMenu.style.maxHeight = '55vh';
+            } else if (viewportHeight <= 900) {
+                userMenu.style.maxHeight = '65vh';
             } else {
-                userMenu.style.maxHeight = '75vh';
+                userMenu.style.maxHeight = '60vh';
             }
         }
     }
