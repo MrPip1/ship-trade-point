@@ -114,6 +114,30 @@ body {
     border-top: 1px solid #00d4ff;
     padding: 1rem;
     position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar for mobile menu */
+.mobile-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mobile-menu::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.mobile-menu::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 3px;
+}
+
+.mobile-menu::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 .mobile-menu-close {
@@ -305,6 +329,30 @@ body {
     background: rgba(0, 0, 0, 0.3);
     padding: 2rem 0;
     backdrop-filter: blur(10px);
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar for filters */
+.filters::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filters::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.filters::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 3px;
+}
+
+.filters::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 .filter-container {
@@ -410,6 +458,30 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar for ship listings */
+.ship-listings::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ship-listings::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.ship-listings::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 4px;
+}
+
+.ship-listings::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 .listings-header {
@@ -590,12 +662,56 @@ body {
     color: white;
     box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
     overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar for webkit browsers */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 .modal-content.large {
     max-width: 90vw;
     max-height: 95vh;
     overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar for large modals */
+.modal-content.large::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content.large::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.modal-content.large::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 4px;
+}
+
+.modal-content.large::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 /* Mobile modal adjustments */
@@ -605,11 +721,29 @@ body {
         padding: 1rem;
         width: 98%;
         max-height: 98vh;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
     
     .modal-content.large {
         max-width: 98vw;
         max-height: 98vh;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .user-menu {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .mobile-menu {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .filters {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .ship-listings {
+        -webkit-overflow-scrolling: touch;
     }
 }
 
@@ -741,6 +875,28 @@ body {
     min-height: 400px;
     max-height: 80vh;
     overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar for user menu */
+.user-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.user-menu::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.user-menu::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 4px;
+}
+
+.user-menu::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 @media (max-width: 768px) {
@@ -812,6 +968,46 @@ body {
     padding: 1rem;
     margin-bottom: 2rem;
     min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar for user menu lists */
+.history-list::-webkit-scrollbar,
+.favorites-list::-webkit-scrollbar,
+.wishlist-list::-webkit-scrollbar,
+.listings-list::-webkit-scrollbar,
+.messages-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.history-list::-webkit-scrollbar-track,
+.favorites-list::-webkit-scrollbar-track,
+.wishlist-list::-webkit-scrollbar-track,
+.listings-list::-webkit-scrollbar-track,
+.messages-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.history-list::-webkit-scrollbar-thumb,
+.favorites-list::-webkit-scrollbar-thumb,
+.wishlist-list::-webkit-scrollbar-thumb,
+.listings-list::-webkit-scrollbar-thumb,
+.messages-list::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 3px;
+}
+
+.history-list::-webkit-scrollbar-thumb:hover,
+.favorites-list::-webkit-scrollbar-thumb:hover,
+.wishlist-list::-webkit-scrollbar-thumb:hover,
+.listings-list::-webkit-scrollbar-thumb:hover,
+.messages-list::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 .message-item {
@@ -862,6 +1058,30 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar for stats grid */
+.stats-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.stats-grid::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.stats-grid::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 3px;
+}
+
+.stats-grid::-webkit-scrollbar-thumb:hover {
+    background: #0099cc;
 }
 
 .stat-card {
