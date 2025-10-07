@@ -1183,7 +1183,50 @@ function switchTab(tabName) {
 }
 
 function openModal(modalId) {
-    document.getElementById(modalId).style.display = 'block';
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'block';
+    
+    // Dynamically adjust modal height based on viewport
+    adjustModalHeight(modal);
+}
+
+function adjustModalHeight(modal) {
+    const viewportHeight = window.innerHeight;
+    const modalContent = modal.querySelector('.modal-content');
+    
+    if (!modalContent) return;
+    
+    // Calculate optimal height based on viewport
+    let maxHeight;
+    if (viewportHeight <= 600) {
+        maxHeight = '92vh';
+    } else if (viewportHeight <= 700) {
+        maxHeight = '90vh';
+    } else if (viewportHeight <= 800) {
+        maxHeight = '88vh';
+    } else if (viewportHeight <= 900) {
+        maxHeight = '85vh';
+    } else {
+        maxHeight = '85vh';
+    }
+    
+    modalContent.style.maxHeight = maxHeight;
+    
+    // Adjust user menu specifically
+    if (modal.id === 'userMenuModal') {
+        const userMenu = modal.querySelector('.user-menu');
+        if (userMenu) {
+            if (viewportHeight <= 600) {
+                userMenu.style.maxHeight = '60vh';
+            } else if (viewportHeight <= 700) {
+                userMenu.style.maxHeight = '65vh';
+            } else if (viewportHeight <= 800) {
+                userMenu.style.maxHeight = '70vh';
+            } else {
+                userMenu.style.maxHeight = '75vh';
+            }
+        }
+    }
 }
 
 function closeModal(modalId) {
@@ -1353,4 +1396,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Clean up expired sessions on load
     cleanupExpiredSessions();
+    
+    // Add window resize listener for dynamic height adjustment
+    window.addEventListener('resize', function() {
+        // Adjust any open modals when window is resized
+        const modals = ['loginModal', 'registerModal', 'contactModal', 'userMenuModal', 'addShipModal'];
+        modals.forEach(modalId => {
+            const modal = document.getElementById(modalId);
+            if (modal && modal.style.display === 'block') {
+                adjustModalHeight(modal);
+            }
+        });
+    });
 });
