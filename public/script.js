@@ -11,99 +11,12 @@ let availableTags = new Set(); // Dynamic tags from ship listings
 let customSearchTags = new Set(); // Custom tags added by users
 let messages = []; // Chat messages between buyers and sellers
 
-// Sample ship data
-const sampleShips = [
-    {
-        id: 1,
-        name: "Thunderbolt Fighter",
-        price: 2500,
-        description: "A sleek combat vessel designed for speed and maneuverability. Perfect for space battles and quick strikes.",
-        category: "pvp",
-        tags: [],
-        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjgwIiB5PSI0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMDBkNGZmIi8+CiAgPHJlY3QgeD0iNzAiIHk9IjQ1IiB3aWR0aD0iNjAiIGhlaWdodD0iMTAiIGZpbGw9IiMwMGQ0ZmYiLz4KICA8cmVjdCB4PSI4NSIgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iIzAwZDRmZiIvPgogIDx0ZXh0IHg9IjEwMCIgeT0iNTUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5UaHVuZGVyYm9sdDwvdGV4dD4KPC9zdmc+",
-        seller: "Captain_Space",
-        discord: "Captain_Space#1234",
-        dateAdded: new Date('2024-01-15'),
-        blueprintFile: "thunderbolt_blueprint.txt",
-        blueprintImage: null,
-        paymentMethod: "in-person"
-    },
-    {
-        id: 2,
-        name: "Deep Core Miner",
-        price: 4500,
-        description: "Heavy-duty mining vessel with reinforced hull and powerful drilling equipment. Built to withstand asteroid fields.",
-        category: "storage",
-        tags: [],
-        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjUwIiB5PSIzMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2ZmNjYwMCIvPgogIDxyZWN0IHg9IjYwIiB5PSI0MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjY2M0NDAwIi8+CiAgPHJlY3QgeD0iNzAiIHk9IjIwIiB3aWR0aD0iNjAiIGhlaWdodD0iMjAiIGZpbGw9IiNmZjY2MDAiLz4KICA8dGV4dCB4PSIxMDAiIHk9IjU1IiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TWluZXI8L3RleHQ+Cjwvc3ZnPg==",
-        seller: "Mining_Master",
-        discord: "Mining_Master#5678",
-        dateAdded: new Date('2024-01-20'),
-        blueprintFile: "deep_core_blueprint.txt",
-        blueprintImage: null,
-        paymentMethod: "nova-bank"
-    },
-    {
-        id: 3,
-        name: "Stellar Cruiser",
-        price: 8500,
-        description: "Luxury transport ship with spacious cargo holds and comfortable passenger quarters. Ideal for long journeys.",
-        category: "storage",
-        tags: [],
-        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzAwZmZmZiIvPgogIDxyZWN0IHg9IjUwIiB5PSIzMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzAwY2NjYyIvPgogIDxyZWN0IHg9IjYwIiB5PSIyMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMDBhYWFhIi8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNydWlzZXI8L3RleHQ+Cjwvc3ZnPg==",
-        seller: "Stellar_Pilot",
-        discord: "Stellar_Pilot#9012",
-        dateAdded: new Date('2024-01-18'),
-        blueprintFile: "stellar_cruiser_blueprint.txt",
-        blueprintImage: null,
-        paymentMethod: "in-person"
-    },
-    {
-        id: 4,
-        name: "Quantum Explorer",
-        price: 12000,
-        description: "Advanced exploration vessel equipped with cutting-edge sensors and quantum navigation systems.",
-        category: "pvp",
-        tags: [],
-        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjgwIiB5PSI0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZmYwMGZmIi8+CiAgPHJlY3QgeD0iNzAiIHk9IjQ1IiB3aWR0aD0iNjAiIGhlaWdodD0iMTAiIGZpbGw9IiNjYzAwY2MiLz4KICA8cmVjdCB4PSI4NSIgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iI2FhMDBhYSIvPgogIDxyZWN0IHg9IjkwIiB5PSIyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjZmYwMGZmIi8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlF1YW50dW08L3RleHQ+Cjwvc3ZnPg==",
-        seller: "Quantum_Engineer",
-        discord: "Quantum_Engineer#3456",
-        dateAdded: new Date('2024-01-22'),
-        blueprintFile: "quantum_explorer_blueprint.txt",
-        blueprintImage: null,
-        paymentMethod: "nova-bank"
-    },
-    {
-        id: 5,
-        name: "Lightning Bolt",
-        price: 3200,
-        description: "High-speed racing ship designed for competitive racing events. Minimal weight, maximum acceleration.",
-        category: "pvp",
-        tags: [],
-        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjkwIiB5PSI0MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZmZmZjAwIi8+CiAgPHJlY3QgeD0iODUiIHk9IjQ1IiB3aWR0aD0iMzAiIGhlaWdodD0iMTAiIGZpbGw9IiNjY2NjMDAiLz4KICA8cmVjdCB4PSI4NyIgeT0iMzAiIHdpZHRoPSIyNiIgaGVpZ2h0PSIzMCIgZmlsbD0iI2FhYWEwMCIvPgogIDxyZWN0IHg9IjkwIiB5PSIyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZmZmZjAwIi8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxpZ2h0bmluZzwvdGV4dD4KPC9zdmc+",
-        seller: "Speed_Demon",
-        discord: "Speed_Demon#7890",
-        dateAdded: new Date('2024-01-25'),
-        blueprintFile: "lightning_bolt_blueprint.txt",
-        blueprintImage: null,
-        paymentMethod: "in-person"
-    },
-    {
-        id: 6,
-        name: "Iron Fortress",
-        price: 15000,
-        description: "Heavily armored battleship with multiple weapon systems. The ultimate in defensive capabilities.",
-        category: "pvp",
-        tags: [],
-        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjMwIiB5PSIzMCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzY2NjY2NiIvPgogIDxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzMzMzMzMyIvPgogIDxyZWN0IHg9IjUwIiB5PSIyMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgZmlsbD0iIzQ0NDQ0NCIvPgogIDxyZWN0IHg9IjYwIiB5PSIxMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjNTU1NTU1Ii8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZvcnRyZXNzPC90ZXh0Pgo8L3N2Zz4=",
-        seller: "War_Machine",
-        discord: "War_Machine#2468",
-        dateAdded: new Date('2024-01-28'),
-        blueprintFile: "iron_fortress_blueprint.txt",
-        blueprintImage: null,
-        paymentMethod: "nova-bank"
-    }
-];
+// Admin system
+let isAdmin = false;
+const ADMIN_EMAIL = 'froggy.gaming.gg@gmail.com';
+
+// Ship data (starts empty for production)
+const sampleShips = [];
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -121,6 +34,8 @@ function initializeApp() {
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
+        isAdmin = currentUser.email === ADMIN_EMAIL;
+        currentUser.isAdmin = isAdmin;
         updateAuthUI();
     }
     
@@ -137,6 +52,7 @@ function setupEventListeners() {
     // Navigation events
     document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
     document.getElementById('registerBtn').addEventListener('click', () => openModal('registerModal'));
+    document.getElementById('adminBtn').addEventListener('click', () => openModal('adminModal'));
     document.getElementById('userMenuBtn').addEventListener('click', () => openModal('userMenuModal'));
     
     // Search and filter events
@@ -175,6 +91,21 @@ function setupEventListeners() {
         e.preventDefault();
         closeModal('registerModal');
         openModal('loginModal');
+    });
+    
+    // Custom alert event listeners
+    document.getElementById('alertOkBtn').addEventListener('click', closeCustomAlert);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('customAlert').style.display === 'block') {
+            closeCustomAlert();
+        }
+    });
+    
+    // Admin tab switching
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            switchAdminTab(this.dataset.tab);
+        });
     });
 }
 
@@ -394,7 +325,7 @@ function handleSendMessage() {
     const messageText = document.getElementById('contactMessage').value.trim();
     
     if (!messageText) {
-        alert('Please enter a message');
+        showCustomAlert('Error', 'Please enter a message', 'error');
         return;
     }
     
@@ -422,7 +353,7 @@ function handleSendMessage() {
     document.getElementById('contactMessage').value = '';
     closeModal('contactModal');
     
-    alert('Message sent! The seller will see your message in their dashboard.');
+    showCustomAlert('Message Sent!', 'The seller will see your message in their dashboard.', 'success');
     updateUserMenu();
 }
 
@@ -453,13 +384,17 @@ function handleLogin(e) {
     const user = registeredUsers.find(u => u.email === email && u.password === password);
     
     if (user) {
+        // Check if admin
+        isAdmin = user.email === ADMIN_EMAIL;
+        
         // Set current user without password
         currentUser = {
             id: user.id,
             name: user.name,
             discord: user.discord,
             email: user.email,
-            joinDate: user.joinDate
+            joinDate: user.joinDate,
+            isAdmin: isAdmin
         };
         
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -468,9 +403,14 @@ function handleLogin(e) {
         
         // Clear form
         document.getElementById('loginForm').reset();
-        alert('Login successful!');
+        
+        if (isAdmin) {
+            showCustomAlert('Admin Login', 'Welcome back, Administrator!', 'success');
+        } else {
+            showCustomAlert('Login Successful!', 'Welcome back to Drednot Shipyard!', 'success');
+        }
     } else {
-        alert('Invalid email or password. Please register first or check your credentials.');
+        showCustomAlert('Login Failed', 'Invalid email or password. Please register first or check your credentials.', 'error');
     }
 }
 
@@ -483,13 +423,13 @@ function handleRegister(e) {
     const confirm = document.getElementById('registerConfirm').value;
     
     if (password !== confirm) {
-        alert('Passwords do not match!');
+        showCustomAlert('Registration Error', 'Passwords do not match!', 'error');
         return;
     }
     
     // Check if email already exists
     if (registeredUsers.find(u => u.email === email)) {
-        alert('An account with this email already exists. Please use a different email or try logging in.');
+        showCustomAlert('Registration Error', 'An account with this email already exists. Please use a different email or try logging in.', 'error');
         return;
     }
     
@@ -522,7 +462,7 @@ function handleRegister(e) {
         
         // Clear form
         document.getElementById('registerForm').reset();
-        alert('Account created successfully! You are now logged in.');
+        showCustomAlert('Welcome Aboard!', 'Account created successfully! You are now logged in.', 'success');
     }
 }
 
@@ -582,12 +522,13 @@ function handleAddShip(e) {
     // Clear form
     document.getElementById('addShipForm').reset();
     
-    alert('Ship successfully added to marketplace!');
+    showCustomAlert('Ship Listed!', 'Ship successfully added to marketplace!', 'success');
 }
 
 function updateAuthUI() {
     const loginBtn = document.getElementById('loginBtn');
     const registerBtn = document.getElementById('registerBtn');
+    const adminBtn = document.getElementById('adminBtn');
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userName = document.getElementById('userName');
     
@@ -596,9 +537,17 @@ function updateAuthUI() {
         registerBtn.style.display = 'none';
         userMenuBtn.style.display = 'flex';
         userName.textContent = currentUser.name;
+        
+        // Show admin button if user is admin
+        if (isAdmin) {
+            adminBtn.style.display = 'flex';
+        } else {
+            adminBtn.style.display = 'none';
+        }
     } else {
         loginBtn.style.display = 'block';
         registerBtn.style.display = 'block';
+        adminBtn.style.display = 'none';
         userMenuBtn.style.display = 'none';
     }
 }
@@ -760,9 +709,207 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
+// Custom Alert System
+function showCustomAlert(title, message, type = 'success') {
+    const alertModal = document.getElementById('customAlert');
+    const alertTitle = document.getElementById('alertTitle');
+    const alertMessage = document.getElementById('alertMessage');
+    const alertIcon = document.querySelector('.alert-icon i');
+    
+    // Set content
+    alertTitle.textContent = title;
+    alertMessage.textContent = message;
+    
+    // Set alert type and icon
+    alertModal.className = `custom-alert-modal alert-${type}`;
+    
+    switch(type) {
+        case 'success':
+            alertIcon.className = 'fas fa-check-circle';
+            break;
+        case 'error':
+            alertIcon.className = 'fas fa-exclamation-circle';
+            break;
+        case 'warning':
+            alertIcon.className = 'fas fa-exclamation-triangle';
+            break;
+        case 'info':
+            alertIcon.className = 'fas fa-info-circle';
+            break;
+        default:
+            alertIcon.className = 'fas fa-check-circle';
+    }
+    
+    // Show modal
+    alertModal.style.display = 'block';
+    
+    // Focus on OK button
+    setTimeout(() => {
+        document.getElementById('alertOkBtn').focus();
+    }, 100);
+}
+
+function closeCustomAlert() {
+    const alertModal = document.getElementById('customAlert');
+    alertModal.style.display = 'none';
+}
+
+// Admin Panel Functions
+function switchAdminTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    
+    // Update tab content
+    document.querySelectorAll('.admin-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(`admin${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Tab`).classList.add('active');
+    
+    // Load tab data
+    loadAdminTabData(tabName);
+}
+
+function loadAdminTabData(tabName) {
+    switch(tabName) {
+        case 'overview':
+            updateAdminOverview();
+            break;
+        case 'users':
+            updateAdminUsers();
+            break;
+        case 'ships':
+            updateAdminShips();
+            break;
+        case 'messages':
+            updateAdminMessages();
+            break;
+    }
+}
+
+function updateAdminOverview() {
+    document.getElementById('totalUsers').textContent = registeredUsers.length;
+    document.getElementById('totalShips').textContent = ships.length;
+    document.getElementById('totalMessages').textContent = messages.length;
+    document.getElementById('activeListings').textContent = ships.length;
+}
+
+function updateAdminUsers() {
+    const usersList = document.getElementById('adminUsersList');
+    
+    if (registeredUsers.length === 0) {
+        usersList.innerHTML = '<p>No users registered yet.</p>';
+        return;
+    }
+    
+    usersList.innerHTML = registeredUsers.map(user => `
+        <div class="admin-list-item">
+            <div class="admin-item-header">
+                <div class="admin-item-title">${user.name} ${user.email === ADMIN_EMAIL ? '(Admin)' : ''}</div>
+                <div class="admin-item-actions">
+                    <button class="admin-action-btn" onclick="deleteUser(${user.id})">Delete</button>
+                </div>
+            </div>
+            <div class="admin-item-details">
+                <strong>Email:</strong> ${user.email}<br>
+                <strong>Discord:</strong> ${user.discord}<br>
+                <strong>Joined:</strong> ${new Date(user.joinDate).toLocaleDateString()}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateAdminShips() {
+    const shipsList = document.getElementById('adminShipsList');
+    
+    if (ships.length === 0) {
+        shipsList.innerHTML = '<p>No ships listed yet.</p>';
+        return;
+    }
+    
+    shipsList.innerHTML = ships.map(ship => `
+        <div class="admin-list-item">
+            <div class="admin-item-header">
+                <div class="admin-item-title">${ship.name}</div>
+                <div class="admin-item-actions">
+                    <button class="admin-action-btn" onclick="deleteShip(${ship.id})">Delete</button>
+                </div>
+            </div>
+            <div class="admin-item-details">
+                <strong>Price:</strong> $${ship.price.toLocaleString()}<br>
+                <strong>Seller:</strong> ${ship.seller} (${ship.discord})<br>
+                <strong>Category:</strong> ${ship.category}<br>
+                <strong>Listed:</strong> ${new Date(ship.dateAdded).toLocaleDateString()}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateAdminMessages() {
+    const messagesList = document.getElementById('adminMessagesList');
+    
+    if (messages.length === 0) {
+        messagesList.innerHTML = '<p>No messages yet.</p>';
+        return;
+    }
+    
+    messagesList.innerHTML = messages.map(msg => `
+        <div class="admin-list-item">
+            <div class="admin-item-header">
+                <div class="admin-item-title">Message about ${msg.shipName}</div>
+                <div class="admin-item-actions">
+                    <button class="admin-action-btn" onclick="deleteMessage(${msg.id})">Delete</button>
+                </div>
+            </div>
+            <div class="admin-item-details">
+                <strong>From:</strong> ${msg.buyerName} (${msg.buyerDiscord})<br>
+                <strong>To:</strong> ${msg.sellerName} (${msg.sellerDiscord})<br>
+                <strong>Message:</strong> ${msg.message}<br>
+                <strong>Sent:</strong> ${new Date(msg.timestamp).toLocaleString()}
+            </div>
+        </div>
+    `).join('');
+}
+
+function deleteUser(userId) {
+    if (confirm('Are you sure you want to delete this user?')) {
+        registeredUsers = registeredUsers.filter(user => user.id !== userId);
+        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+        updateAdminUsers();
+        updateAdminOverview();
+        showCustomAlert('User Deleted', 'User has been removed from the system.', 'success');
+    }
+}
+
+function deleteShip(shipId) {
+    if (confirm('Are you sure you want to delete this ship listing?')) {
+        ships = ships.filter(ship => ship.id !== shipId);
+        filteredShips = [...ships];
+        updateAvailableTags();
+        renderTagFilters();
+        renderShips();
+        updateAdminShips();
+        updateAdminOverview();
+        showCustomAlert('Ship Deleted', 'Ship listing has been removed from the marketplace.', 'success');
+    }
+}
+
+function deleteMessage(messageId) {
+    if (confirm('Are you sure you want to delete this message?')) {
+        messages = messages.filter(msg => msg.id !== messageId);
+        localStorage.setItem('messages', JSON.stringify(messages));
+        updateAdminMessages();
+        updateAdminOverview();
+        showCustomAlert('Message Deleted', 'Message has been removed from the system.', 'success');
+    }
+}
+
 // Logout function (can be called from user menu)
 function logout() {
     currentUser = null;
+    isAdmin = false;
     localStorage.removeItem('currentUser');
     updateAuthUI();
     closeModal('userMenuModal');
