@@ -39,6 +39,10 @@ function initializeApp() {
         updateAuthUI();
     }
     
+    // Load ships from localStorage
+    ships = JSON.parse(localStorage.getItem('ships') || '[]');
+    filteredShips = [...ships];
+    
     // Load user preferences
     userFavorites = JSON.parse(localStorage.getItem('userFavorites') || '[]');
     userWishlist = JSON.parse(localStorage.getItem('userWishlist') || '[]');
@@ -129,10 +133,12 @@ function setupModalEvents() {
 }
 
 function loadSampleData() {
-    ships = [...sampleShips];
-    filteredShips = [...ships];
-    updateAvailableTags();
-    renderTagFilters();
+    // Ships are now loaded from localStorage in initializeApp()
+    // Only update tags and filters if we have ships
+    if (ships.length > 0) {
+        updateAvailableTags();
+        renderTagFilters();
+    }
 }
 
 function renderShips() {
@@ -510,6 +516,9 @@ function handleAddShip(e) {
     ships.unshift(newShip);
     filteredShips = [...ships];
     userListings.unshift(newShip.id);
+    
+    // Save to localStorage
+    localStorage.setItem('ships', JSON.stringify(ships));
     localStorage.setItem('userListings', JSON.stringify(userListings));
     
     // Update available tags and re-render filters
@@ -887,6 +896,10 @@ function deleteShip(shipId) {
     if (confirm('Are you sure you want to delete this ship listing?')) {
         ships = ships.filter(ship => ship.id !== shipId);
         filteredShips = [...ships];
+        
+        // Save to localStorage
+        localStorage.setItem('ships', JSON.stringify(ships));
+        
         updateAvailableTags();
         renderTagFilters();
         renderShips();
