@@ -18,7 +18,7 @@ const sampleShips = [
         price: 2500,
         description: "A sleek combat vessel designed for speed and maneuverability. Perfect for space battles and quick strikes.",
         category: "pvp",
-        tags: ["@armored", "@fast", "@pvp"],
+        tags: [],
         image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjgwIiB5PSI0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMDBkNGZmIi8+CiAgPHJlY3QgeD0iNzAiIHk9IjQ1IiB3aWR0aD0iNjAiIGhlaWdodD0iMTAiIGZpbGw9IiMwMGQ0ZmYiLz4KICA8cmVjdCB4PSI4NSIgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iIzAwZDRmZiIvPgogIDx0ZXh0IHg9IjEwMCIgeT0iNTUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5UaHVuZGVyYm9sdDwvdGV4dD4KPC9zdmc+",
         seller: "Captain_Space",
         discord: "Captain_Space#1234",
@@ -33,7 +33,7 @@ const sampleShips = [
         price: 4500,
         description: "Heavy-duty mining vessel with reinforced hull and powerful drilling equipment. Built to withstand asteroid fields.",
         category: "storage",
-        tags: ["@armored", "@efficient", "@mining"],
+        tags: [],
         image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjUwIiB5PSIzMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2ZmNjYwMCIvPgogIDxyZWN0IHg9IjYwIiB5PSI0MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjY2M0NDAwIi8+CiAgPHJlY3QgeD0iNzAiIHk9IjIwIiB3aWR0aD0iNjAiIGhlaWdodD0iMjAiIGZpbGw9IiNmZjY2MDAiLz4KICA8dGV4dCB4PSIxMDAiIHk9IjU1IiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TWluZXI8L3RleHQ+Cjwvc3ZnPg==",
         seller: "Mining_Master",
         discord: "Mining_Master#5678",
@@ -48,7 +48,7 @@ const sampleShips = [
         price: 8500,
         description: "Luxury transport ship with spacious cargo holds and comfortable passenger quarters. Ideal for long journeys.",
         category: "storage",
-        tags: ["@efficient", "@rare", "@transport"],
+        tags: [],
         image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzAwZmZmZiIvPgogIDxyZWN0IHg9IjUwIiB5PSIzMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzAwY2NjYyIvPgogIDxyZWN0IHg9IjYwIiB5PSIyMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMDBhYWFhIi8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNydWlzZXI8L3RleHQ+Cjwvc3ZnPg==",
         seller: "Stellar_Pilot",
         discord: "Stellar_Pilot#9012",
@@ -63,7 +63,7 @@ const sampleShips = [
         price: 12000,
         description: "Advanced exploration vessel equipped with cutting-edge sensors and quantum navigation systems.",
         category: "pvp",
-        tags: ["@rare", "@efficient", "@exploration"],
+        tags: [],
         image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjgwIiB5PSI0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZmYwMGZmIi8+CiAgPHJlY3QgeD0iNzAiIHk9IjQ1IiB3aWR0aD0iNjAiIGhlaWdodD0iMTAiIGZpbGw9IiNjYzAwY2MiLz4KICA8cmVjdCB4PSI4NSIgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iI2FhMDBhYSIvPgogIDxyZWN0IHg9IjkwIiB5PSIyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjZmYwMGZmIi8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlF1YW50dW08L3RleHQ+Cjwvc3ZnPg==",
         seller: "Quantum_Engineer",
         discord: "Quantum_Engineer#3456",
@@ -78,7 +78,7 @@ const sampleShips = [
         price: 3200,
         description: "High-speed racing ship designed for competitive racing events. Minimal weight, maximum acceleration.",
         category: "pvp",
-        tags: ["@fast", "@racing", "@beginner"],
+        tags: [],
         image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjkwIiB5PSI0MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZmZmZjAwIi8+CiAgPHJlY3QgeD0iODUiIHk9IjQ1IiB3aWR0aD0iMzAiIGhlaWdodD0iMTAiIGZpbGw9IiNjY2NjMDAiLz4KICA8cmVjdCB4PSI4NyIgeT0iMzAiIHdpZHRoPSIyNiIgaGVpZ2h0PSIzMCIgZmlsbD0iI2FhYWEwMCIvPgogIDxyZWN0IHg9IjkwIiB5PSIyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZmZmZjAwIi8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxpZ2h0bmluZzwvdGV4dD4KPC9zdmc+",
         seller: "Speed_Demon",
         discord: "Speed_Demon#7890",
@@ -93,7 +93,7 @@ const sampleShips = [
         price: 15000,
         description: "Heavily armored battleship with multiple weapon systems. The ultimate in defensive capabilities.",
         category: "pvp",
-        tags: ["@armored", "@rare", "@pvp"],
+        tags: [],
         image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPgogIDxyZWN0IHg9IjMwIiB5PSIzMCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzY2NjY2NiIvPgogIDxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzMzMzMzMyIvPgogIDxyZWN0IHg9IjUwIiB5PSIyMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgZmlsbD0iIzQ0NDQ0NCIvPgogIDxyZWN0IHg9IjYwIiB5PSIxMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjNTU1NTU1Ii8+CiAgPHRleHQgeD0iMTAwIiB5PSI1NSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZvcnRyZXNzPC90ZXh0Pgo8L3N2Zz4=",
         seller: "War_Machine",
         discord: "War_Machine#2468",
@@ -167,11 +167,6 @@ function setupEventListeners() {
     
     document.getElementById('addNewShipBtn').addEventListener('click', () => openModal('addShipModal'));
     document.getElementById('sendMessageBtn').addEventListener('click', handleSendMessage);
-    document.getElementById('showRegister').addEventListener('click', (e) => {
-        e.preventDefault();
-        closeModal('loginModal');
-        openModal('registerModal');
-    });
     document.getElementById('showLogin').addEventListener('click', (e) => {
         e.preventDefault();
         closeModal('registerModal');
