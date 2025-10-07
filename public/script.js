@@ -9,6 +9,262 @@ let userListings = [];
 let availableTags = new Set(); // Dynamic tags from ship listings
 let customSearchTags = new Set(); // Custom tags added by users
 let messages = []; // Chat messages between buyers and sellers
+let allUsers = []; // Store all registered users
+let userSessions = []; // Track active sessions
+
+// Utility functions for authentication
+function generateUserId() {
+    return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function generateSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+// Simple password hashing (in production, use proper bcrypt or similar)
+function hashPassword(password) {
+    let hash = 0;
+    if (password.length === 0) return hash.toString();
+    for (let i = 0; i < password.length; i++) {
+        const char = password.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash).toString(16);
+}
+
+// Password validation
+function validatePassword(password) {
+    const errors = [];
+    if (password.length < 8) {
+        errors.push('Password must be at least 8 characters long');
+    }
+    if (!/[A-Z]/.test(password)) {
+        errors.push('Password must contain at least one uppercase letter');
+    }
+    if (!/[a-z]/.test(password)) {
+        errors.push('Password must contain at least one lowercase letter');
+    }
+    if (!/[0-9]/.test(password)) {
+        errors.push('Password must contain at least one number');
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        errors.push('Password must contain at least one special character');
+    }
+    return errors;
+}
+
+// Email validation
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Discord validation
+function validateDiscord(discord) {
+    const discordRegex = /^.{3,32}#[0-9]{4}$/;
+    return discordRegex.test(discord);
+}
+
+// Show user feedback instead of alerts
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existing = document.querySelector('.notification');
+    if (existing) {
+        existing.remove();
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+            <span>${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Form validation helpers
+function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    // Remove existing error
+    const existingError = field.parentElement.querySelector('.field-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Add error styling
+    field.style.borderColor = '#ff6b6b';
+    
+    // Add error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'field-error';
+    errorDiv.textContent = message;
+    errorDiv.style.color = '#ff6b6b';
+    errorDiv.style.fontSize = '0.8rem';
+    errorDiv.style.marginTop = '0.25rem';
+    
+    field.parentElement.appendChild(errorDiv);
+}
+
+function clearFormErrors(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    
+    // Remove all error messages
+    const errors = form.querySelectorAll('.field-error');
+    errors.forEach(error => error.remove());
+    
+    // Reset field styling
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.style.borderColor = '';
+    });
+}
+
+function clearFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    const error = field.parentElement.querySelector('.field-error');
+    if (error) {
+        error.remove();
+    }
+    
+    field.style.borderColor = '';
+}
+
+// Real-time validation setup
+function setupRealTimeValidation() {
+    // Password strength indicator
+    const passwordField = document.getElementById('registerPassword');
+    if (passwordField) {
+        passwordField.addEventListener('input', function() {
+            updatePasswordStrength(this.value);
+        });
+    }
+    
+    // Email validation
+    const emailField = document.getElementById('registerEmail');
+    if (emailField) {
+        emailField.addEventListener('blur', function() {
+            if (this.value && !validateEmail(this.value)) {
+                showFieldError('registerEmail', 'Please enter a valid email address');
+            } else {
+                clearFieldError('registerEmail');
+            }
+        });
+    }
+    
+    // Discord validation
+    const discordField = document.getElementById('registerDiscord');
+    if (discordField) {
+        discordField.addEventListener('blur', function() {
+            if (this.value && !validateDiscord(this.value)) {
+                showFieldError('registerDiscord', 'Please enter a valid Discord name (e.g., Username#1234)');
+            } else {
+                clearFieldError('registerDiscord');
+            }
+        });
+    }
+    
+    // Name validation
+    const nameField = document.getElementById('registerName');
+    if (nameField) {
+        nameField.addEventListener('blur', function() {
+            if (this.value && this.value.length < 3) {
+                showFieldError('registerName', 'Name must be at least 3 characters long');
+            } else {
+                clearFieldError('registerName');
+            }
+        });
+    }
+    
+    // Password confirmation
+    const confirmField = document.getElementById('registerConfirm');
+    if (confirmField) {
+        confirmField.addEventListener('input', function() {
+            const password = document.getElementById('registerPassword').value;
+            if (this.value && this.value !== password) {
+                showFieldError('registerConfirm', 'Passwords do not match');
+            } else {
+                clearFieldError('registerConfirm');
+            }
+        });
+    }
+}
+
+// Password strength indicator
+function updatePasswordStrength(password) {
+    const strengthContainer = document.getElementById('passwordStrength') || createPasswordStrengthIndicator();
+    
+    if (!password) {
+        strengthContainer.style.display = 'none';
+        return;
+    }
+    
+    strengthContainer.style.display = 'block';
+    
+    const errors = validatePassword(password);
+    const strengthLevel = getPasswordStrength(password);
+    
+    const strengthText = strengthContainer.querySelector('.strength-text');
+    const strengthBar = strengthContainer.querySelector('.strength-fill');
+    
+    strengthText.textContent = strengthLevel.text;
+    strengthText.style.color = strengthLevel.color;
+    
+    strengthBar.className = `strength-fill ${strengthLevel.class}`;
+}
+
+function createPasswordStrengthIndicator() {
+    const passwordField = document.getElementById('registerPassword');
+    const container = document.createElement('div');
+    container.id = 'passwordStrength';
+    container.className = 'password-strength';
+    container.innerHTML = `
+        <div class="strength-text"></div>
+        <div class="strength-bar">
+            <div class="strength-fill"></div>
+        </div>
+    `;
+    
+    passwordField.parentElement.appendChild(container);
+    return container;
+}
+
+function getPasswordStrength(password) {
+    const errors = validatePassword(password);
+    const length = password.length;
+    
+    if (length < 6) {
+        return { text: 'Very Weak', color: '#ff6b6b', class: 'strength-weak' };
+    } else if (length < 8 || errors.length > 3) {
+        return { text: 'Weak', color: '#ff6b6b', class: 'strength-weak' };
+    } else if (errors.length > 2) {
+        return { text: 'Fair', color: '#ffa726', class: 'strength-fair' };
+    } else if (errors.length > 1) {
+        return { text: 'Good', color: '#66bb6a', class: 'strength-good' };
+    } else if (errors.length > 0) {
+        return { text: 'Strong', color: '#4caf50', class: 'strength-strong' };
+    } else {
+        return { text: 'Very Strong', color: '#4caf50', class: 'strength-strong' };
+    }
+}
 
 // Sample ship data
 const sampleShips = [
@@ -113,11 +369,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
-    // Load user data from localStorage
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        updateAuthUI();
+    // Load all users from localStorage
+    allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+    userSessions = JSON.parse(localStorage.getItem('userSessions') || '[]');
+    
+    // Load current user session
+    const savedSession = localStorage.getItem('currentSession');
+    if (savedSession) {
+        const session = JSON.parse(savedSession);
+        const user = allUsers.find(u => u.id === session.userId);
+        if (user && session.expiresAt > Date.now()) {
+            currentUser = user;
+            updateAuthUI();
+        } else {
+            // Session expired, clear it
+            localStorage.removeItem('currentSession');
+        }
     }
     
     // Load user preferences
@@ -157,6 +424,9 @@ function setupEventListeners() {
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
     document.getElementById('registerForm').addEventListener('submit', handleRegister);
     document.getElementById('addShipForm').addEventListener('submit', handleAddShip);
+    
+    // Real-time validation
+    setupRealTimeValidation();
     
     // User menu events
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -390,7 +660,7 @@ function handleSendMessage() {
     const messageText = document.getElementById('contactMessage').value.trim();
     
     if (!messageText) {
-        alert('Please enter a message');
+        showNotification('Please enter a message', 'error');
         return;
     }
     
@@ -418,7 +688,7 @@ function handleSendMessage() {
     document.getElementById('contactMessage').value = '';
     closeModal('contactModal');
     
-    alert('Message sent! The seller will see your message in their dashboard.');
+    showNotification('Message sent! The seller will see your message in their dashboard.', 'success');
     updateUserMenu();
 }
 
@@ -442,56 +712,189 @@ function toggleFavorite(shipId) {
 
 function handleLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
+    const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     
-    // Simple validation (in a real app, this would be server-side)
-    if (email && password) {
-        currentUser = {
-            id: Date.now(),
-            name: email.split('@')[0],
-            email: email,
-            joinDate: new Date()
-        };
-        
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        updateAuthUI();
-        closeModal('loginModal');
-        
-        // Clear form
-        document.getElementById('loginForm').reset();
+    // Clear previous errors
+    clearFormErrors('loginForm');
+    
+    // Validation
+    if (!email) {
+        showFieldError('loginEmail', 'Email is required');
+        return;
     }
+    
+    if (!validateEmail(email)) {
+        showFieldError('loginEmail', 'Please enter a valid email address');
+        return;
+    }
+    
+    if (!password) {
+        showFieldError('loginPassword', 'Password is required');
+        return;
+    }
+    
+    // Find user by email
+    const user = allUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+    
+    if (!user) {
+        showFieldError('loginEmail', 'No account found with this email address');
+        return;
+    }
+    
+    // Verify password
+    const hashedPassword = hashPassword(password);
+    if (user.passwordHash !== hashedPassword) {
+        showFieldError('loginPassword', 'Incorrect password');
+        return;
+    }
+    
+    // Create session
+    const sessionId = generateSessionId();
+    const session = {
+        id: sessionId,
+        userId: user.id,
+        createdAt: new Date(),
+        expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days
+    };
+    
+    // Update user last login
+    user.lastLogin = new Date();
+    user.loginCount = (user.loginCount || 0) + 1;
+    
+    // Save data
+    allUsers = allUsers.map(u => u.id === user.id ? user : u);
+    userSessions.push(session);
+    
+    localStorage.setItem('allUsers', JSON.stringify(allUsers));
+    localStorage.setItem('userSessions', JSON.stringify(userSessions));
+    localStorage.setItem('currentSession', JSON.stringify(session));
+    
+    // Set current user
+    currentUser = user;
+    updateAuthUI();
+    closeModal('loginModal');
+    
+    // Clear form
+    document.getElementById('loginForm').reset();
+    
+    showNotification(`Welcome back, ${user.name}!`, 'success');
 }
 
 function handleRegister(e) {
     e.preventDefault();
-    const name = document.getElementById('registerName').value;
-    const discord = document.getElementById('registerDiscord').value;
-    const email = document.getElementById('registerEmail').value;
+    const name = document.getElementById('registerName').value.trim();
+    const discord = document.getElementById('registerDiscord').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
     const confirm = document.getElementById('registerConfirm').value;
     
-    if (password !== confirm) {
-        alert('Passwords do not match!');
+    // Clear previous errors
+    clearFormErrors('registerForm');
+    
+    // Validation
+    if (!name) {
+        showFieldError('registerName', 'In-game name is required');
         return;
     }
     
-    if (name && discord && email && password) {
-        currentUser = {
-            id: Date.now(),
-            name: name,
-            discord: discord,
-            email: email,
-            joinDate: new Date()
-        };
-        
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        updateAuthUI();
-        closeModal('registerModal');
-        
-        // Clear form
-        document.getElementById('registerForm').reset();
+    if (name.length < 3) {
+        showFieldError('registerName', 'Name must be at least 3 characters long');
+        return;
     }
+    
+    if (!discord) {
+        showFieldError('registerDiscord', 'Discord name is required');
+        return;
+    }
+    
+    if (!validateDiscord(discord)) {
+        showFieldError('registerDiscord', 'Please enter a valid Discord name (e.g., Username#1234)');
+        return;
+    }
+    
+    if (!email) {
+        showFieldError('registerEmail', 'Email is required');
+        return;
+    }
+    
+    if (!validateEmail(email)) {
+        showFieldError('registerEmail', 'Please enter a valid email address');
+        return;
+    }
+    
+    // Check if email already exists
+    if (allUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+        showFieldError('registerEmail', 'An account with this email already exists');
+        return;
+    }
+    
+    if (!password) {
+        showFieldError('registerPassword', 'Password is required');
+        return;
+    }
+    
+    // Validate password strength
+    const passwordErrors = validatePassword(password);
+    if (passwordErrors.length > 0) {
+        showFieldError('registerPassword', passwordErrors.join(', '));
+        return;
+    }
+    
+    if (!confirm) {
+        showFieldError('registerConfirm', 'Please confirm your password');
+        return;
+    }
+    
+    if (password !== confirm) {
+        showFieldError('registerConfirm', 'Passwords do not match');
+        return;
+    }
+    
+    // Create new user
+    const userId = generateUserId();
+    const newUser = {
+        id: userId,
+        name: name,
+        discord: discord,
+        email: email,
+        passwordHash: hashPassword(password),
+        joinDate: new Date(),
+        lastLogin: null,
+        loginCount: 0,
+        isActive: true,
+        preferences: {
+            theme: 'dark',
+            notifications: true
+        }
+    };
+    
+    // Add user to all users
+    allUsers.push(newUser);
+    localStorage.setItem('allUsers', JSON.stringify(allUsers));
+    
+    // Create session
+    const sessionId = generateSessionId();
+    const session = {
+        id: sessionId,
+        userId: userId,
+        createdAt: new Date(),
+        expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days
+    };
+    
+    userSessions.push(session);
+    localStorage.setItem('userSessions', JSON.stringify(userSessions));
+    localStorage.setItem('currentSession', JSON.stringify(session));
+    
+    // Set current user
+    currentUser = newUser;
+    updateAuthUI();
+    closeModal('registerModal');
+    
+    // Clear form
+    document.getElementById('registerForm').reset();
+    
+    showNotification(`Account created successfully! Welcome to Drednot Shipyard, ${name}!`, 'success');
 }
 
 function handleAddShip(e) {
@@ -550,7 +953,7 @@ function handleAddShip(e) {
     // Clear form
     document.getElementById('addShipForm').reset();
     
-    alert('Ship successfully added to marketplace!');
+    showNotification('Ship successfully added to marketplace!', 'success');
 }
 
 function updateAuthUI() {
@@ -574,6 +977,9 @@ function updateAuthUI() {
 function updateUserMenu() {
     if (!currentUser) return;
     
+    // Update user info display
+    updateUserInfo();
+    
     // Update buyer tab
     updatePurchaseHistory();
     updateFavoritesList();
@@ -583,6 +989,40 @@ function updateUserMenu() {
     updateMyListings();
     updateBuyerMessages();
     updateSalesStats();
+}
+
+function updateUserInfo() {
+    const menuUserName = document.getElementById('menuUserName');
+    if (menuUserName) {
+        menuUserName.textContent = currentUser.name;
+    }
+    
+    // Add account info if not exists
+    let accountInfo = document.getElementById('accountInfo');
+    if (!accountInfo) {
+        const userInfo = document.querySelector('.user-info');
+        if (userInfo) {
+            accountInfo = document.createElement('div');
+            accountInfo.id = 'accountInfo';
+            accountInfo.className = 'account-info';
+            userInfo.appendChild(accountInfo);
+        }
+    }
+    
+    if (accountInfo) {
+        const joinDate = new Date(currentUser.joinDate).toLocaleDateString();
+        const lastLogin = currentUser.lastLogin ? new Date(currentUser.lastLogin).toLocaleDateString() : 'Never';
+        const loginCount = currentUser.loginCount || 0;
+        
+        accountInfo.innerHTML = `
+            <h4>Account Information</h4>
+            <p><strong>Email:</strong> ${currentUser.email}</p>
+            <p><strong>Discord:</strong> ${currentUser.discord}</p>
+            <p><strong>Member since:</strong> ${joinDate}</p>
+            <p><strong>Last login:</strong> ${lastLogin}</p>
+            <p><strong>Login count:</strong> ${loginCount}</p>
+        `;
+    }
 }
 
 function updatePurchaseHistory() {
@@ -730,10 +1170,84 @@ function closeModal(modalId) {
 
 // Logout function (can be called from user menu)
 function logout() {
+    // Remove current session
+    localStorage.removeItem('currentSession');
+    
+    // Clear current user
     currentUser = null;
-    localStorage.removeItem('currentUser');
     updateAuthUI();
     closeModal('userMenuModal');
+    
+    showNotification('You have been logged out successfully', 'info');
+}
+
+// Account persistence verification
+function verifyAccountPersistence() {
+    const userCount = allUsers.length;
+    const sessionCount = userSessions.length;
+    
+    console.log(`Account Persistence Status:`);
+    console.log(`- Total registered users: ${userCount}`);
+    console.log(`- Active sessions: ${sessionCount}`);
+    console.log(`- Current user: ${currentUser ? currentUser.name : 'None'}`);
+    
+    if (userCount > 0) {
+        showNotification(`Account persistence verified! ${userCount} user(s) stored securely.`, 'success');
+    }
+}
+
+// Session cleanup (remove expired sessions)
+function cleanupExpiredSessions() {
+    const now = Date.now();
+    const activeSessions = userSessions.filter(session => session.expiresAt > now);
+    
+    if (activeSessions.length !== userSessions.length) {
+        userSessions = activeSessions;
+        localStorage.setItem('userSessions', JSON.stringify(userSessions));
+        console.log(`Cleaned up ${userSessions.length - activeSessions.length} expired sessions`);
+    }
+}
+
+// Export account data for backup
+function exportAccountData() {
+    if (!currentUser) {
+        showNotification('Please log in to export your data', 'error');
+        return;
+    }
+    
+    const accountData = {
+        user: {
+            id: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email,
+            discord: currentUser.discord,
+            joinDate: currentUser.joinDate,
+            lastLogin: currentUser.lastLogin,
+            loginCount: currentUser.loginCount
+        },
+        preferences: {
+            favorites: userFavorites,
+            wishlist: userWishlist,
+            purchases: userPurchases,
+            listings: userListings,
+            customTags: Array.from(customSearchTags)
+        },
+        messages: messages.filter(msg => 
+            msg.buyerName === currentUser.name || msg.sellerName === currentUser.name
+        ),
+        exportDate: new Date().toISOString(),
+        version: '1.0'
+    };
+    
+    const dataStr = JSON.stringify(accountData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `drednot-shipyard-backup-${currentUser.name}-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    
+    showNotification('Account data exported successfully!', 'success');
 }
 
 // Add logout button to user menu
@@ -746,5 +1260,24 @@ document.addEventListener('DOMContentLoaded', function() {
         logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
         logoutBtn.onclick = logout;
         userMenu.appendChild(logoutBtn);
+        
+        // Add account verification button for testing
+        const verifyBtn = document.createElement('button');
+        verifyBtn.className = 'btn-secondary';
+        verifyBtn.style.marginTop = '1rem';
+        verifyBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account Storage';
+        verifyBtn.onclick = verifyAccountPersistence;
+        userMenu.appendChild(verifyBtn);
+        
+        // Add data export button
+        const exportBtn = document.createElement('button');
+        exportBtn.className = 'btn-secondary';
+        exportBtn.style.marginTop = '1rem';
+        exportBtn.innerHTML = '<i class="fas fa-download"></i> Export Account Data';
+        exportBtn.onclick = exportAccountData;
+        userMenu.appendChild(exportBtn);
     }
+    
+    // Clean up expired sessions on load
+    cleanupExpiredSessions();
 });

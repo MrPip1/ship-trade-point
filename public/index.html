@@ -121,6 +121,7 @@
                 <div class="form-group">
                     <label for="registerDiscord">Discord Name:</label>
                     <input type="text" id="registerDiscord" placeholder="YourDiscord#1234" required>
+                    <small style="color: rgba(255,255,255,0.7);">Format: Username#1234 (required for communication)</small>
                 </div>
                 <div class="form-group">
                     <label for="registerEmail">Email:</label>
@@ -128,11 +129,12 @@
                 </div>
                 <div class="form-group">
                     <label for="registerPassword">Password:</label>
-                    <input type="password" id="registerPassword" required>
+                    <input type="password" id="registerPassword" required placeholder="Create a strong password">
+                    <small style="color: rgba(255,255,255,0.7);">Must be at least 8 characters with uppercase, lowercase, number, and special character</small>
                 </div>
                 <div class="form-group">
                     <label for="registerConfirm">Confirm Password:</label>
-                    <input type="password" id="registerConfirm" required>
+                    <input type="password" id="registerConfirm" required placeholder="Re-enter your password">
                 </div>
                 <button type="submit" class="btn-primary">Register</button>
             </form>

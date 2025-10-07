@@ -718,6 +718,175 @@ body {
     margin-bottom: 2rem;
 }
 
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    max-width: 400px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification-content {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.notification-success {
+    border-color: #4caf50;
+}
+
+.notification-success .notification-content {
+    border-color: #4caf50;
+}
+
+.notification-error {
+    border-color: #f44336;
+}
+
+.notification-error .notification-content {
+    border-color: #f44336;
+}
+
+.notification-info {
+    border-color: #2196f3;
+}
+
+.notification-info .notification-content {
+    border-color: #2196f3;
+}
+
+.notification-content i {
+    font-size: 1.2rem;
+}
+
+.notification-success i {
+    color: #4caf50;
+}
+
+.notification-error i {
+    color: #f44336;
+}
+
+.notification-info i {
+    color: #2196f3;
+}
+
+.notification-content span {
+    flex: 1;
+    color: white;
+    font-weight: 500;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.notification-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Form Validation */
+.field-error {
+    color: #ff6b6b !important;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: #ff6b6b !important;
+    box-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
+}
+
+/* Password strength indicator */
+.password-strength {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.strength-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin-top: 0.25rem;
+    overflow: hidden;
+}
+
+.strength-fill {
+    height: 100%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.strength-weak {
+    background: #ff6b6b;
+    width: 25%;
+}
+
+.strength-fair {
+    background: #ffa726;
+    width: 50%;
+}
+
+.strength-good {
+    background: #66bb6a;
+    width: 75%;
+}
+
+.strength-strong {
+    background: #4caf50;
+    width: 100%;
+}
+
+/* Account info display */
+.account-info {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.account-info h4 {
+    color: #00d4ff;
+    margin-bottom: 0.5rem;
+}
+
+.account-info p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-container {
