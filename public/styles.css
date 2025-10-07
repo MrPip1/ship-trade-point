@@ -651,13 +651,13 @@ body {
 
 .modal-content {
     background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-    margin: 2% auto;
-    padding: 1.5rem;
+    margin: 1% auto;
+    padding: 1rem;
     border: 2px solid #00d4ff;
     border-radius: 15px;
     width: 95%;
     max-width: 500px;
-    max-height: 95vh;
+    max-height: 85vh;
     position: relative;
     color: white;
     box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
@@ -688,7 +688,7 @@ body {
 
 .modal-content.large {
     max-width: 90vw;
-    max-height: 95vh;
+    max-height: 80vh;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
@@ -781,7 +781,7 @@ body {
 
 /* Forms */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .form-row {
@@ -867,13 +867,13 @@ body {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 /* User Menu */
 .user-menu {
-    min-height: 400px;
-    max-height: 80vh;
+    min-height: 300px;
+    max-height: 70vh;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
@@ -915,15 +915,15 @@ body {
 
 .user-info {
     text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .menu-tabs {
     display: flex;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .tab-btn {
@@ -965,10 +965,10 @@ body {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    min-height: 100px;
-    max-height: 300px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    min-height: 80px;
+    max-height: 200px;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
@@ -1012,7 +1012,7 @@ body {
 
 .message-item {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     cursor: pointer;
     transition: background 0.3s ease;
 }
@@ -1296,19 +1296,20 @@ body {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
 .account-info h4 {
     color: #00d4ff;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
 }
 
 .account-info p {
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    margin: 0.25rem 0;
+    font-size: 0.8rem;
+    margin: 0.1rem 0;
 }
 
 /* Responsive Design */
@@ -1543,6 +1544,112 @@ body {
     
     .hero-content h1 {
         font-size: 1.8rem;
+    }
+}
+
+/* Chromebook and small laptop screens */
+@media (max-width: 1366px) and (max-height: 768px) {
+    .modal-content {
+        margin: 0.5% auto;
+        padding: 0.75rem;
+        max-height: 90vh;
+    }
+    
+    .modal-content.large {
+        max-height: 85vh;
+    }
+    
+    .user-menu {
+        max-height: 75vh;
+        min-height: 250px;
+    }
+    
+    .form-group {
+        margin-bottom: 0.75rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.5rem;
+    }
+    
+    .history-list,
+    .favorites-list,
+    .wishlist-list,
+    .listings-list,
+    .messages-list {
+        max-height: 150px;
+        padding: 0.5rem;
+    }
+    
+    .tab-content h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Specific Chromebook optimization */
+@media (max-height: 800px) {
+    .modal-content {
+        max-height: 88vh;
+        margin: 0.5% auto;
+        padding: 0.75rem;
+    }
+    
+    .modal-content.large {
+        max-height: 82vh;
+    }
+    
+    .user-menu {
+        max-height: 70vh;
+        min-height: 200px;
+    }
+    
+    .form-group {
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.4rem;
+        font-size: 0.9rem;
+    }
+    
+    .form-actions {
+        margin-top: 0.75rem;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .history-list,
+    .favorites-list,
+    .wishlist-list,
+    .listings-list,
+    .messages-list {
+        max-height: 120px;
+        padding: 0.4rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .account-info {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .account-info h4 {
+        font-size: 0.8rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .account-info p {
+        font-size: 0.75rem;
+        margin: 0.05rem 0;
     }
 }
 
