@@ -1,0 +1,23 @@
+{
+  "name": "drednot-shipyard",
+  "version": "1.0.0",
+  "description": "A marketplace for buying and selling Drednot-style spaceships",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve .",
+    "build": "echo 'No build step required for static site'"
+  },
+  "keywords": [
+    "spaceship",
+    "marketplace",
+    "drednot",
+    "gaming",
+    "trading"
+  ],
+  "author": "MrPip1",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}

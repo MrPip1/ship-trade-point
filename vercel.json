@@ -1,0 +1,5 @@
+{
+  "buildCommand": "echo 'No build step required'",
+  "outputDirectory": "public",
+  "installCommand": "npm install"
+}

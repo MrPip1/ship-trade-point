@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drednot Shipyard - Buy & Sell Spaceships</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-rocket"></i>
+                <span>Drednot Shipyard</span>
+            </div>
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="Search ships...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="nav-actions">
+                <button id="loginBtn" class="btn-secondary">Login</button>
+                <button id="registerBtn" class="btn-primary">Register</button>
+                <button id="userMenuBtn" class="btn-user" style="display: none;">
+                    <i class="fas fa-user"></i>
+                    <span id="userName"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Discover Your Next Spaceship</h1>
+                <p>Buy and sell custom-built Drednot spaceships in our marketplace</p>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters">
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label>Category:</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="storage">Storage</option>
+                        <option value="pvp">PVP Ship</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Price Range:</label>
+                    <select id="priceFilter">
+                        <option value="">Any Price</option>
+                        <option value="0-1000">Under 1,000</option>
+                        <option value="1000-5000">1,000 - 5,000</option>
+                        <option value="5000-10000">5,000 - 10,000</option>
+                        <option value="10000+">10,000+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Tags:</label>
+                    <div class="tag-filters" id="tagFilters">
+                        <!-- Dynamic tags will be populated here -->
+                    </div>
+                    <div class="custom-tag-search">
+                        <input type="text" id="customTagInput" placeholder="Search custom tags...">
+                        <button id="addCustomTagBtn" class="btn-secondary">Add Tag</button>
+                    </div>
+                </div>
+                <button id="clearFilters" class="btn-secondary">Clear Filters</button>
+            </div>
+        </section>
+
+        <!-- Ship Listings -->
+        <section class="ship-listings">
+            <div class="listings-header">
+                <h2>Available Ships</h2>
+                <div class="listings-count">
+                    <span id="shipCount">12</span> ships available
+                </div>
+            </div>
+            <div id="shipGrid" class="ship-grid">
+                <!-- Ship cards will be populated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Register</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">In-Game Name:</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerDiscord">Discord Name:</label>
+                    <input type="text" id="registerDiscord" placeholder="YourDiscord#1234" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password:</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirm">Confirm Password:</label>
+                    <input type="password" id="registerConfirm" required>
+                </div>
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+            <p>Already have an account? <a href="#" id="showLogin">Login here</a></p>
+        </div>
+    </div>
+
+    <!-- Contact Seller Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Contact Seller</h2>
+            <div id="contactShipInfo"></div>
+            <div class="contact-form">
+                <div class="form-group">
+                    <label for="contactMessage">Your Message:</label>
+                    <textarea id="contactMessage" rows="4" placeholder="Hi! I'm interested in your ship. Can we discuss the details?" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('contactModal')">Cancel</button>
+                    <button id="sendMessageBtn" class="btn-primary">Send Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Menu Modal -->
+    <div id="userMenuModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="user-menu">
+                <div class="user-info">
+                    <h3>Welcome, <span id="menuUserName"></span></h3>
+                </div>
+                <div class="menu-tabs">
+                    <button class="tab-btn active" data-tab="buyer">Buyer Menu</button>
+                    <button class="tab-btn" data-tab="seller">Seller Menu</button>
+                </div>
+                
+                <!-- Buyer Tab -->
+                <div id="buyerTab" class="tab-content active">
+                    <h4>Your Purchases</h4>
+                    <div id="purchaseHistory" class="history-list">
+                        <p>No purchases yet</p>
+                    </div>
+                    <h4>Favorites</h4>
+                    <div id="favoritesList" class="favorites-list">
+                        <p>No favorites yet</p>
+                    </div>
+                    <h4>Wishlist</h4>
+                    <div id="wishlistList" class="wishlist-list">
+                        <p>No items in wishlist</p>
+                    </div>
+                </div>
+                
+                <!-- Seller Tab -->
+                <div id="sellerTab" class="tab-content">
+                    <h4>My Listings</h4>
+                    <button id="addNewShipBtn" class="btn-primary">Add New Ship</button>
+                    <div id="myListings" class="listings-list">
+                        <p>No ships listed yet</p>
+                    </div>
+                    <h4>Buyer Messages</h4>
+                    <div id="buyerMessages" class="messages-list">
+                        <p>No messages yet</p>
+                    </div>
+                    <h4>Sales Analytics</h4>
+                    <div id="salesStats" class="stats-grid">
+                        <div class="stat-card">
+                            <h5>Total Sales</h5>
+                            <span class="stat-value">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <h5>Active Listings</h5>
+                            <span class="stat-value">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <h5>Total Revenue</h5>
+                            <span class="stat-value">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Ship Modal -->
+    <div id="addShipModal" class="modal">
+        <div class="modal-content large">
+            <span class="close">&times;</span>
+            <h2>Add New Ship</h2>
+            <form id="addShipForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="shipName">Ship Name:</label>
+                        <input type="text" id="shipName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipPrice">Price:</label>
+                        <input type="number" id="shipPrice" min="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="shipDescription">Blurb (Optional):</label>
+                    <textarea id="shipDescription" rows="3" placeholder="Short description or additional info..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="shipCategory">Category:</label>
+                        <select id="shipCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="storage">Storage</option>
+                            <option value="pvp">PVP Ship</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipTags">Tags (use @ symbol):</label>
+                        <input type="text" id="shipTags" placeholder="@armored @fast @efficient">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="shipImage">Ship Screenshot:</label>
+                    <input type="file" id="shipImage" accept="image/*" required>
+                    <small style="color: rgba(255,255,255,0.7);">Upload a screenshot of your ship</small>
+                </div>
+                <div class="form-group">
+                    <label for="blueprintFile">Blueprint File (Text) - Optional:</label>
+                    <input type="file" id="blueprintFile" accept=".txt,.json,.blueprint">
+                    <small style="color: rgba(255,255,255,0.7);">Upload the blueprint text file (optional)</small>
+                </div>
+                <div class="form-group">
+                    <label for="blueprintImage">Blueprint Image (Optional):</label>
+                    <input type="file" id="blueprintImage" accept="image/*">
+                    <small style="color: rgba(255,255,255,0.7);">Optional blueprint image/design</small>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method:</label>
+                    <select id="paymentMethod" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="in-person">In-Person Payment</option>
+                        <option value="nova-bank">Nova Bank Transfer</option>
+                    </select>
+                    <small style="color: rgba(255,255,255,0.7);">Choose how you want to receive payment</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('addShipModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">List Ship</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
