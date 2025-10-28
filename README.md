@@ -15,8 +15,10 @@ A modern web marketplace for buying and selling Drednot-style spaceships with a 
 
 ## Categories
 
+- **Warship**: Combat and battle vessels
 - **Storage**: Cargo and resource ships
-- **PVP Ship**: Combat and battle vessels
+- **Art**: Aesthetic or showcase builds
+- **Misc**: Everything else
 
 ## Tech Stack
 
