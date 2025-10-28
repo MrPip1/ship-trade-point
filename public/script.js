@@ -26,14 +26,49 @@ document.addEventListener('DOMContentLoaded', function() {
     renderShips();
 });
 
+// Persistent auth helpers using cookies (fallback to localStorage)
+function setCookie(name, value, days) {
+    const expires = days ? `; expires=${new Date(Date.now() + days*24*60*60*1000).toUTCString()}` : '';
+    document.cookie = `${name}=${encodeURIComponent(value)}${expires}; path=/`;
+}
+
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : null;
+}
+
+function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+}
+
+function persistCurrentUser(user) {
+    if (!user) return;
+    const data = JSON.stringify(user);
+    setCookie('shipyard_user', data, 365);
+    localStorage.setItem('currentUser', data);
+}
+
+function loadPersistedUser() {
+    const cookieVal = getCookie('shipyard_user');
+    if (cookieVal) {
+        try {
+            return JSON.parse(cookieVal);
+        } catch (_) {
+            // fall through to localStorage
+        }
+    }
+    const saved = localStorage.getItem('currentUser');
+    return saved ? JSON.parse(saved) : null;
+}
+
 function initializeApp() {
     // Load registered users
     registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
     
-    // Load current user data from localStorage
-    const savedUser = localStorage.getItem('currentUser');
+    // Load current user data (cookies first, then localStorage)
+    const savedUser = loadPersistedUser();
     if (savedUser) {
-        currentUser = JSON.parse(savedUser);
+        currentUser = savedUser;
         isAdmin = currentUser.email === ADMIN_EMAIL;
         currentUser.isAdmin = isAdmin;
         updateAuthUI();
@@ -439,7 +474,7 @@ function handleLogin(e) {
             isAdmin: isAdmin
         };
         
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        persistCurrentUser(currentUser);
         updateAuthUI();
         closeModal('loginModal');
         
@@ -498,7 +533,7 @@ function handleRegister(e) {
             joinDate: newUser.joinDate
         };
         
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        persistCurrentUser(currentUser);
         updateAuthUI();
         closeModal('registerModal');
         
@@ -994,6 +1029,7 @@ function logout() {
     currentUser = null;
     isAdmin = false;
     localStorage.removeItem('currentUser');
+    deleteCookie('shipyard_user');
     updateAuthUI();
     closeModal('userMenuModal');
 }
