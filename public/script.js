@@ -203,7 +203,25 @@ function applyFilters(searchTerm = '') {
     const category = document.getElementById('categoryFilter').value;
     const priceRange = document.getElementById('priceFilter').value;
     const activeTags = Array.from(document.querySelectorAll('.tag-filter.active')).map(btn => btn.dataset.tag);
-    
+
+    // Parse price range robustly, supporting formats like "0-1000", "1000-5000", and "10000+"
+    let minPrice = 0;
+    let maxPrice = Infinity;
+    if (priceRange) {
+        if (priceRange.includes('+')) {
+            // e.g., "10000+"
+            const base = parseInt(priceRange.replace('+', ''));
+            if (!Number.isNaN(base)) {
+                minPrice = base;
+                maxPrice = Infinity;
+            }
+        } else {
+            const [lo, hi] = priceRange.split('-').map(n => parseInt(n));
+            if (!Number.isNaN(lo)) minPrice = lo;
+            if (!Number.isNaN(hi)) maxPrice = hi;
+        }
+    }
+
     filteredShips = ships.filter(ship => {
         // Search term filter
         if (searchTerm && !ship.name.toLowerCase().includes(searchTerm) && 
@@ -217,11 +235,8 @@ function applyFilters(searchTerm = '') {
         }
         
         // Price range filter
-        if (priceRange) {
-            const [min, max] = priceRange.split('-').map(p => p === '+' ? Infinity : parseInt(p));
-            if (ship.price < min || (max !== Infinity && ship.price > max)) {
-                return false;
-            }
+        if (ship.price < minPrice || ship.price > maxPrice) {
+            return false;
         }
         
         // Tag filter (both available tags and custom search tags)
@@ -611,7 +626,7 @@ function updatePurchaseHistory() {
         <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem 0;">
             <strong>${purchase.shipName}</strong><br>
             <span style="color: #00d4ff;">$${purchase.price.toLocaleString()}</span><br>
-            <small style="color: rgba(255,255,255,0.7);">${purchase.date.toLocaleDateString()}</small>
+            <small style="color: rgba(255,255,255,0.7);">${new Date(purchase.date).toLocaleDateString()}</small>
         </div>
     `).join('');
 }
@@ -668,7 +683,7 @@ function updateMyListings() {
                 <div>
                     <strong>${ship.name}</strong><br>
                     <span style="color: #00d4ff;">$${ship.price.toLocaleString()}</span><br>
-                    <small style="color: rgba(255,255,255,0.7);">Listed ${ship.dateAdded.toLocaleDateString()}</small><br>
+                    <small style="color: rgba(255,255,255,0.7);">Listed ${new Date(ship.dateAdded).toLocaleDateString()}</small><br>
                     <small style="color: rgba(255,255,255,0.7);">${ship.blueprintFile ? `Blueprint: ${ship.blueprintFile}` : 'No blueprint provided'}</small>
                 </div>
             </div>
@@ -689,7 +704,7 @@ function updateBuyerMessages() {
         <div class="message-item" onclick="markMessageRead(${msg.id})">
             <div class="message-header">
                 <span class="message-sender">${msg.buyerName} (${msg.buyerDiscord})</span>
-                <span class="message-time">${msg.timestamp.toLocaleDateString()}</span>
+                <span class="message-time">${new Date(msg.timestamp).toLocaleDateString()}</span>
             </div>
             <div class="message-preview">${msg.message}</div>
             <div class="message-ship">About: ${msg.shipName}</div>
