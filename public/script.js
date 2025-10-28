@@ -41,6 +41,26 @@ function initializeApp() {
     
     // Load ships from localStorage
     ships = JSON.parse(localStorage.getItem('ships') || '[]');
+
+    // Migrate legacy or invalid ship categories to new set
+    const allowedCategories = new Set(['warship', 'storage', 'art', 'misc']);
+    let didMigrateCategories = false;
+    ships.forEach(ship => {
+        if (!ship || !ship.category) return;
+        // Legacy mapping
+        if (ship.category === 'pvp') {
+            ship.category = 'warship';
+            didMigrateCategories = true;
+        }
+        // Coerce unknowns to misc
+        if (!allowedCategories.has(ship.category)) {
+            ship.category = 'misc';
+            didMigrateCategories = true;
+        }
+    });
+    if (didMigrateCategories) {
+        localStorage.setItem('ships', JSON.stringify(ships));
+    }
     filteredShips = [...ships];
     
     // Load user preferences
